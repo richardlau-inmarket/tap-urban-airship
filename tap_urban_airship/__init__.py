@@ -103,18 +103,19 @@ def sync_entity(entity, primary_keys, date_keys=None, transform=None):
                 raise KeyError('None of date keys found in the row')
 
             last_touched = max(row[date_key] for date_key in date_keys if date_key in row)
+
             original_last_touched = last_touched # for debugging
             if isinstance(last_touched, (int, float)):
-                last_touched = datetime.datetime.fromtimestamp(last_touched)
+                try:
+                    last_touched = datetime.datetime.fromtimestamp(last_touched)
+                except:
+                    print(f"original_last_touched was {original_last_touched}")
+                    print(f"last_touched is: {last_touched}")
 
             utils.update_state(STATE, entity, last_touched)
 
-            try:
-                if last_touched < start_date:
-                    continue
-            except:
-                print(f"original_last_touched was {original_last_touched}")
-                print(f"last_touched is: {last_touched}")
+            if last_touched < start_date:
+                continue
 
         row = transform_row(row, schema)
 
