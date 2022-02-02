@@ -80,7 +80,7 @@ def sync_entity(entity, primary_keys, date_keys=None, transform=None):
     singer.write_schema(entity, schema, primary_keys)
 
     start_date = get_start(entity)
-    start_date_timestamp = datetime.timestamp(start_date)
+    start_date_timestamp = datetime.datetime.timestamp(start_date)
 
     for row in gen_request(entity):
         if transform:
