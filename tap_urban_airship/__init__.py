@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import ciso8601
 import datetime
 import os
 import sys
@@ -76,7 +75,7 @@ def gen_request(endpoint):
         url = data.get('next_page')
 
 
-def sync_entity(entity, primary_keys, date_keys=None, transform=None):
+def sync_entity(entity, primary_keys, date_keys=None, transform=None, epoch_millisecond_timestamp=False):
     schema = load_schema(entity)
     singer.write_schema(entity, schema, primary_keys)
 
@@ -104,14 +103,8 @@ def sync_entity(entity, primary_keys, date_keys=None, transform=None):
 
             last_touched = max(row[date_key] for date_key in date_keys if date_key in row)
 
-            original_last_touched = last_touched # for debugging
-            if isinstance(last_touched, (int, float)):
-                try:
-                    last_touched = datetime.datetime.fromtimestamp(last_touched)
-                except:
-                    LOGGER.info(f"original_last_touched was {original_last_touched}")
-                    LOGGER.info(f"last_touched is: {last_touched}")
-                    raise
+            if epoch_millisecond_timestamp:
+                last_touched = datetime.datetime.fromtimestamp(1000 * last_touched)
 
             utils.update_state(STATE, entity, last_touched)
 
@@ -133,7 +126,12 @@ def do_sync():
     # the record was touched.
     sync_entity("lists", ["name"], ["created", "last_updated"])
     sync_entity("channels", ["channel_id"], ["created", "last_registration"])
-    sync_entity("segments", ["id"], ["creation_date", "modification_date"])
+    sync_entity(
+        "segments",
+        ["id"],
+        data_keys=["creation_date", "modification_date"],
+        epoch_millisecond_timestamp=True
+    )
 
     # Named Users have full channel objects nested in them. We only need the
     # ids for generating the join table, so we transform the list of channel
