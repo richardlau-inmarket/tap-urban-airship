@@ -8,12 +8,10 @@
       "type": ["string", "null"]
     },
     "creation_date": {
-      "type": ["string", "null"],
-      "format": "date-time"
+      "type": ["integer", "null"]
     },
     "modification_date": {
-      "type": ["string", "null"],
-      "format": "date-time"
+      "type": ["integer", "null"]
     }
   }
 }
