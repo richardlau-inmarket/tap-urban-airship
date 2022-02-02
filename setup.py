@@ -10,9 +10,9 @@ setup(name='tap-urban-airship',
       classifiers=['Programming Language :: Python :: 3 :: Only'],
       py_modules=['tap_urban_airship'],
       install_requires=[
-          'singer-python==1.2.0',
-          'requests==2.20.0',
-          'backoff==1.3.2'
+          'singer-python==5.12.2',
+          'requests==2.27.1',
+          'backoff==1.11.1'
       ],
       entry_points='''
           [console_scripts]
