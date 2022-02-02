@@ -105,6 +105,7 @@ def sync_entity(entity, primary_keys, date_keys=None, transform=None, epoch_mill
 
             if epoch_millisecond_timestamp:
                 last_touched = datetime.datetime.fromtimestamp(last_touched / 1000)
+                last_touched = datetime.strftime(last_touched, "%Y-%m-%dT%H:%M:%SZ")
 
             utils.update_state(STATE, entity, last_touched)
 
