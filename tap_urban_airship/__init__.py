@@ -135,7 +135,7 @@ def do_sync():
     sync_entity(
         "segments",
         ["id"],
-        data_keys=["creation_date", "modification_date"],
+        date_keys=["creation_date", "modification_date"],
         epoch_millisecond_timestamp=True
     )
 
