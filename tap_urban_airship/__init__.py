@@ -80,6 +80,8 @@ def sync_entity(entity, primary_keys, date_keys=None, transform=None):
     singer.write_schema(entity, schema, primary_keys)
 
     start_date = get_start(entity)
+    start_date_timestamp = datetime.timestamp(start_date)
+
     for row in gen_request(entity):
         if transform:
             row = transform(row)
@@ -99,9 +101,13 @@ def sync_entity(entity, primary_keys, date_keys=None, transform=None):
             # A KeyError is raised if the row has none of the date keys.
             if not any(date_key in row for date_key in date_keys):
                 raise KeyError('None of date keys found in the row')
+
             last_touched = max(row[date_key] for date_key in date_keys if date_key in row)
             utils.update_state(STATE, entity, last_touched)
-            if last_touched < start_date:
+
+            if isinstance(last_touched, (int, float)) and last_touched < start_date_timestamp:
+                continue
+            elif last_touched < start_date:
                 continue
 
         row = transform_row(row, schema)
