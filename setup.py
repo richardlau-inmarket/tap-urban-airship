@@ -12,7 +12,7 @@ setup(name='tap-urban-airship',
       install_requires=[
           'singer-python==5.12.2',
           'requests==2.27.1',
-          'backoff>=1.8.1'
+          'backoff>=1.8.0'
       ],
       entry_points='''
           [console_scripts]
