@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import ciso8601
 import datetime
 import os
 import sys
@@ -80,7 +81,9 @@ def sync_entity(entity, primary_keys, date_keys=None, transform=None):
     singer.write_schema(entity, schema, primary_keys)
 
     start_date = get_start(entity)
-    start_date_timestamp = datetime.datetime.timestamp(start_date)
+
+    start_date_datetime = ciso8601.parse_datetime(start_date)
+    start_date_timestamp = datetime.datetime.timestamp(start_date_datetime)
 
     for row in gen_request(entity):
         if transform:
