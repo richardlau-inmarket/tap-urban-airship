@@ -104,7 +104,7 @@ def sync_entity(entity, primary_keys, date_keys=None, transform=None, epoch_mill
             last_touched = max(row[date_key] for date_key in date_keys if date_key in row)
 
             if epoch_millisecond_timestamp:
-                last_touched = datetime.datetime.fromtimestamp(1000 * last_touched)
+                last_touched = datetime.datetime.fromtimestamp(last_touched / 1000)
 
             utils.update_state(STATE, entity, last_touched)
 
@@ -129,7 +129,7 @@ def do_sync():
 
     # Segments are weird.
     # Their two columns `creation_date` and `modification_date` are in epoch milliseconds,
-    # so they need to be multiplied by 1000 to get seconds,
+    # so they need to be divided by 1000 to get seconds,
     # then turned from timestamp to datetime strings
     # See docs: https://docs.airship.com/api/ua/#operation-api-segments-get
     sync_entity(
