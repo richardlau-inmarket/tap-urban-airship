@@ -119,7 +119,7 @@ def do_sync():
     # the record was touched.
     sync_entity("lists", ["name"], ["created", "last_updated"])
     sync_entity("channels", ["channel_id"], ["created", "last_registration"])
-    sync_entity("segments", ["id"], ["creation_date", "modificiation_date"])
+    sync_entity("segments", ["id"], ["creation_date", "modification_date"])
 
     # Named Users have full channel objects nested in them. We only need the
     # ids for generating the join table, so we transform the list of channel
