@@ -70,6 +70,7 @@ def gen_request(endpoint):
         resp = request(url)
         data = resp.json()
         for row in data[endpoint]:
+            LOGGER.info(f"Row looks like: {row}")
             yield row
 
         url = data.get('next_page')
@@ -125,7 +126,7 @@ def do_sync():
     # Lists and Channels are very straight forward to sync. They
     # each have two dates that need to be examined to determine the last time
     # the record was touched.
-    sync_entity("lists", ["name"], ["created", "last_updated"])
+    # sync_entity("lists", ["name"], ["created", "last_updated"])
     sync_entity("channels", ["channel_id"], ["created", "last_registration"])
 
     # Segments are weird.
@@ -133,12 +134,12 @@ def do_sync():
     # so they need to be divided by 1000 to get seconds,
     # then turned from timestamp to datetime strings
     # See docs: https://docs.airship.com/api/ua/#operation-api-segments-get
-    sync_entity(
-        "segments",
-        ["id"],
-        date_keys=["creation_date", "modification_date"],
-        epoch_millisecond_timestamp=True
-    )
+    # sync_entity(
+    #     "segments",
+    #     ["id"],
+    #     date_keys=["creation_date", "modification_date"],
+    #     epoch_millisecond_timestamp=True
+    # )
 
     # Named Users have full channel objects nested in them. We only need the
     # ids for generating the join table, so we transform the list of channel
