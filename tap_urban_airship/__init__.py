@@ -82,9 +82,6 @@ def sync_entity(entity, primary_keys, date_keys=None, transform=None):
 
     start_date = get_start(entity)
 
-    start_date_datetime = ciso8601.parse_datetime(start_date)
-    start_date_timestamp = datetime.datetime.timestamp(start_date_datetime)
-
     for row in gen_request(entity):
         if transform:
             row = transform(row)
@@ -106,11 +103,12 @@ def sync_entity(entity, primary_keys, date_keys=None, transform=None):
                 raise KeyError('None of date keys found in the row')
 
             last_touched = max(row[date_key] for date_key in date_keys if date_key in row)
+            if isinstance(last_touched, (int, float)):
+                last_touched = datetime.datetime.fromtimestamp(last_touched)
+
             utils.update_state(STATE, entity, last_touched)
 
-            if isinstance(last_touched, (int, float)) and last_touched < start_date_timestamp:
-                continue
-            elif last_touched < start_date:
+            if last_touched < start_date:
                 continue
 
         row = transform_row(row, schema)
