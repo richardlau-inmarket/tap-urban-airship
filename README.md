@@ -57,12 +57,6 @@ This tap:
     tap-urban-airship --config config.json [--state state.json]
     ```
 
-## Development Nuances
-Segments are weird.
-According to [Airship's docs](https://docs.airship.com/api/ua/#operation-api-segments-get), `creation_date` and `modification_date` are integers in `in epoch milliseconds`, as opposed their other models that store these as DateTime strings.
-As a result, you have to multiply by 1000 to turn them into seconds, then convert them from timestamp to DateTime string in order to update state properly.
-
-
 ---
 
 Copyright &copy; 2017 Stitch

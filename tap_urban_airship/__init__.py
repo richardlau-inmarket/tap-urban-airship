@@ -121,11 +121,17 @@ def sync_entity(entity, primary_keys, date_keys=None, transform=None, epoch_mill
 def do_sync():
     LOGGER.info("Starting sync")
 
-    # Lists, Channels, and Segments are very straight forward to sync. They
+    # Lists and Channels are very straight forward to sync. They
     # each have two dates that need to be examined to determine the last time
     # the record was touched.
     sync_entity("lists", ["name"], ["created", "last_updated"])
     sync_entity("channels", ["channel_id"], ["created", "last_registration"])
+
+    # Segments are weird.
+    # Their two columns `creation_date` and `modification_date` are in epoch milliseconds,
+    # so they need to be multiplied by 1000 to get seconds,
+    # then turned from timestamp to datetime strings
+    # See docs: https://docs.airship.com/api/ua/#operation-api-segments-get
     sync_entity(
         "segments",
         ["id"],
