@@ -109,8 +109,9 @@ def sync_entity(entity, primary_keys, date_keys=None, transform=None):
                 try:
                     last_touched = datetime.datetime.fromtimestamp(last_touched)
                 except:
-                    print(f"original_last_touched was {original_last_touched}")
-                    print(f"last_touched is: {last_touched}")
+                    LOGGER.info(f"original_last_touched was {original_last_touched}")
+                    LOGGER.info(f"last_touched is: {last_touched}")
+                    raise
 
             utils.update_state(STATE, entity, last_touched)
 
