@@ -2,7 +2,7 @@
   "type": "object",
   "properties": {
     "alias": { "type": ["null", "string"] },
-    "attribute": {
+    "attributes": {
       "type": "object",
       "properties": {
         "total_list_items": { "type": ["integer", "null"] },
