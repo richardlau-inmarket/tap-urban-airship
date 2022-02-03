@@ -5,12 +5,12 @@
     "attribute": {
       "type": "object",
       "properties": {
-        "total_list_items": ["integer", "null"],
-        "total_list": ["integer", "null"],
-        "player_id": ["string", "null"],
-        "email": ["string", "null"],
-        "account_source": ["string", "null"],
-        "username": ["string", "null"]
+        "total_list_items": { "type": ["integer", "null"] },
+        "total_list": { "type": ["integer", "null"] },
+        "player_id": { "type": ["string", "null"] },
+        "email": { "type": ["string", "null"] },
+        "account_source": { "type": ["string", "null"] },
+        "username": { "type": ["string", "null"] }
       }
     },
     "background": { "type": ["boolean", "null"] },
@@ -22,18 +22,18 @@
     "device_attributes": {
       "type": "object",
       "properties": {
-        "ua_app_version": ["string", "null"],
-        "ua_carrier": ["string", "null"],
-        "ua_country": ["string", "null"],
-        "ua_device_model": ["string", "null"],
-        "ua_device_os": ["string", "null"],
-        "ua_language": ["string", "null"],
-        "ua_local_tz": ["string", "null"],
-        "ua_named_user_id": ["string", "null"],
-        "ua_nu_country": ["string", "null"],
-        "ua_nu_language": ["string", "null"],
-        "ua_nu_local_tz": ["string", "null"],
-        "ua_sdk_version": ["string", "null"]
+        "ua_app_version": { "type": ["string", "null"] },
+        "ua_carrier": { "type": ["string", "null"] },
+        "ua_country": { "type": ["string", "null"] },
+        "ua_device_model": { "type": ["string", "null"] },
+        "ua_device_os": { "type": ["string", "null"] },
+        "ua_language": { "type": ["string", "null"] },
+        "ua_local_tz": { "type": ["string", "null"] },
+        "ua_named_user_id": { "type": ["string", "null"] },
+        "ua_nu_country": { "type": ["string", "null"] },
+        "ua_nu_language": { "type": ["string", "null"] },
+        "ua_nu_local_tz": { "type": ["string", "null"] },
+        "ua_sdk_version": { "type": ["string", "null"] }
       }
     },
     "device_type": { "type": ["string", "null"] },
