@@ -17,14 +17,54 @@ CONFIG = {
     'app_key': None,
     'app_secret': None,
     'start_date': None,
+    "entities": ["lists", "channels", "segments", "named_users"]
 }
 STATE = {}
+
+def flatten_channels(item):
+    item['channels'] = [c['channel_id'] for c in item['channels']]
+    return item
+
+ENTITIES = {
+    # Lists and Channels are very straight forward to sync. They
+    # each have two dates that need to be examined to determine the last time
+    # the record was touched.
+    "lists": [["name"], ["created", "last_updated"]],
+    "channels": [["channel_id"], ["created", "last_registration"]],
+
+    # Segments are weird.
+    # Their two columns `creation_date` and `modification_date` are in epoch milliseconds,
+    # so they need to be divided by 1000 to get seconds,
+    # then turned from timestamp to datetime strings
+    # See docs: https://docs.airship.com/api/ua/#operation-api-segments-get
+    "segments": [
+        ["id"],  # primary_keys
+        ["creation_date", "modification_date"],  # date_keys
+        None,  # transform; unfortunately, we need to list positional arg to reach next one
+        True  # epoch_millisecond_timestamp
+    ],
+
+    # Named Users have full channel objects nested in them. We only need the
+    # ids for generating the join table, so we transform the list of channel
+    # objects into a list of channel ids before transforming the row based on
+    # the schema.
+    # The date fields are not described in API documentation
+    # https://docs.urbanairship.com/api/ua/#schemas/nameduserresponsebody,
+    # but actually they are present.
+    "named_users": [
+        ["named_user_id"],  # primary_keys
+        ["created", "last_modified"],  # date_keys
+        flatten_channels  # transform
+    ]
+}
 
 LOGGER = singer.get_logger()
 SESSION = requests.Session()
 
+
 def get_abs_path(path):
     return os.path.join(os.path.dirname(os.path.realpath(__file__)), path)
+
 
 def load_schema(entity):
     return utils.load_json(get_abs_path("schemas/{}.json".format(entity)))
@@ -35,6 +75,7 @@ def get_start(entity):
         STATE[entity] = CONFIG['start_date']
 
     return STATE[entity]
+
 
 @backoff.on_exception(backoff.expo,
                       (requests.exceptions.RequestException),
@@ -123,42 +164,20 @@ def sync_entity(entity, primary_keys, date_keys=None, transform=None, epoch_mill
 def do_sync():
     LOGGER.info("Starting sync")
 
-    # Lists and Channels are very straight forward to sync. They
-    # each have two dates that need to be examined to determine the last time
-    # the record was touched.
-    # sync_entity("lists", ["name"], ["created", "last_updated"])
-    sync_entity("channels", ["channel_id"], ["created", "last_registration"])
+    for entity in CONFIG["entities"]:
+        if not ENTITIES.get(entity):
+            raise Exception(f"Sync for {entity} is not defined")
 
-    # Segments are weird.
-    # Their two columns `creation_date` and `modification_date` are in epoch milliseconds,
-    # so they need to be divided by 1000 to get seconds,
-    # then turned from timestamp to datetime strings
-    # See docs: https://docs.airship.com/api/ua/#operation-api-segments-get
-    # sync_entity(
-    #     "segments",
-    #     ["id"],
-    #     date_keys=["creation_date", "modification_date"],
-    #     epoch_millisecond_timestamp=True
-    # )
-
-    # Named Users have full channel objects nested in them. We only need the
-    # ids for generating the join table, so we transform the list of channel
-    # objects into a list of channel ids before transforming the row based on
-    # the schema.
-    def flatten_channels(item):
-        item['channels'] = [c['channel_id'] for c in item['channels']]
-        return item
-
-    # The date fields are not described in API documentation
-    # https://docs.urbanairship.com/api/ua/#schemas/nameduserresponsebody,
-    # but actually they are present.
-    sync_entity("named_users", ["named_user_id"], ["created", "last_modified"], transform=flatten_channels)
+        sync_entity(entity, **ENTITIES[entity])
 
     LOGGER.info("Sync completed")
 
 
 def main_impl():
-    args = utils.parse_args(["app_key", "app_secret", "start_date"])
+    args = utils.parse_args(["app_key", "app_secret", "start_date", "entities"])
+
+    LOGGER.info(f"Config looks like: {args.config}")
+
     CONFIG.update(args.config)
 
     if args.state:
