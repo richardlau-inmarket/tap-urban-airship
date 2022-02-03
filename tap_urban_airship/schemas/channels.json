@@ -10,7 +10,7 @@
         "player_id": ["string", "null"],
         "email": ["string", "null"],
         "account_source": ["string", "null"],
-        "username": ["string", "null"],
+        "username": ["string", "null"]
       }
     },
     "background": { "type": ["boolean", "null"] },
