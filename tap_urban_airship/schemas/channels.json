@@ -5,7 +5,6 @@
     "attributes": {
       "type": "object",
       "properties": {
-        "total_list_items": { "type": ["integer", "null"] },
         "total_list": { "type": ["integer", "null"] },
         "player_id": { "type": ["string", "null"] },
         "email": { "type": ["string", "null"] },
