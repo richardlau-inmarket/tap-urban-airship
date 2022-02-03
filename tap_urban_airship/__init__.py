@@ -168,7 +168,7 @@ def do_sync():
         if not ENTITIES.get(entity):
             raise Exception(f"Sync for {entity} is not defined")
 
-        sync_entity(entity, **ENTITIES[entity])
+        sync_entity(entity, *ENTITIES[entity])
 
     LOGGER.info("Sync completed")
 
