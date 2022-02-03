@@ -1,27 +1,64 @@
 {
   "type": "object",
   "properties": {
-    "channel_id": {
-      "type": "string"
+    "alias": { "type": ["null", "string"] },
+    "attribute": {
+      "type": "object",
+      "properties": {
+        "total_list_items": ["integer", "null"],
+        "total_list": ["integer", "null"],
+        "player_id": ["string", "null"],
+        "email": ["string", "null"],
+        "account_source": ["string", "null"],
+        "username": ["string", "null"],
+      }
     },
-    "device_type": {
-      "type": ["string", "null"]
-    },
-    "installed": {
-      "type": ["boolean", "null"]
-    },
-    "background": {
-      "type": ["boolean", "null"]
-    },
-    "opt_in": {
-      "type": ["boolean", "null"]
-    },
-    "push_address": {
-      "type": ["string", "null"]
-    },
+    "background": { "type": ["boolean", "null"] },
+    "channel_id": { "type": "string" },
     "created": {
       "type": ["string", "null"],
       "format": "date-time"
+    },
+    "device_attributes": {
+      "type": "object",
+      "properties": {
+        "ua_app_version": ["string", "null"],
+        "ua_carrier": ["string", "null"],
+        "ua_country": ["string", "null"],
+        "ua_device_model": ["string", "null"],
+        "ua_device_os": ["string", "null"],
+        "ua_language": ["string", "null"],
+        "ua_local_tz": ["string", "null"],
+        "ua_named_user_id": ["string", "null"],
+        "ua_nu_country": ["string", "null"],
+        "ua_nu_language": ["string", "null"],
+        "ua_nu_local_tz": ["string", "null"],
+        "ua_sdk_version": ["string", "null"]
+      }
+    },
+    "device_type": { "type": ["string", "null"] },
+    "installed": { "type": ["boolean", "null"] },
+    "ios": {
+      "type": "object",
+      "properties": {
+        "badge": {
+          "type": ["integer", "null"]
+        },
+        "quiettime": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": ["string", "null"]
+            },
+            "end": {
+              "type": ["string", "null"]
+            }
+          }
+        },
+        "tz": {
+          "type": ["string", "null"]
+        }
+      }
     },
     "last_registration": {
       "anyOf": [
@@ -34,12 +71,9 @@
         }
       ]
     },
-    "named_user_id": {
-      "type": ["null", "string"]
-    },
-    "alias": {
-      "type": ["null", "string"]
-    },
+    "named_user_id": { "type": ["null", "string"] },
+    "opt_in": { "type": ["boolean", "null"] },
+    "push_address": { "type": ["string", "null"] },
     "tags": {
       "type": "array",
       "items": {
@@ -126,28 +160,6 @@
           "items": {
             "type": ["string"]
           }
-        }
-      }
-    },
-    "ios": {
-      "type": "object",
-      "properties": {
-        "badge": {
-          "type": ["integer", "null"]
-        },
-        "quiettime": {
-          "type": "object",
-          "properties": {
-            "start": {
-              "type": ["string", "null"]
-            },
-            "end": {
-              "type": ["string", "null"]
-            }
-          }
-        },
-        "tz": {
-          "type": ["string", "null"]
         }
       }
     }

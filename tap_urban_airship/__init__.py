@@ -21,9 +21,11 @@ CONFIG = {
 }
 STATE = {}
 
+
 def flatten_channels(item):
     item['channels'] = [c['channel_id'] for c in item['channels']]
     return item
+
 
 ENTITIES = {
     # Lists and Channels are very straight forward to sync. They
